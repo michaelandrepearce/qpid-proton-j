@@ -23,6 +23,7 @@
 
 package org.apache.qpid.proton.amqp.messaging;
 
+import java.util.Objects;
 import org.apache.qpid.proton.amqp.Binary;
 
 public final class Data implements Section
@@ -48,5 +49,18 @@ public final class Data implements Section
     @Override
     public SectionType getType() {
         return SectionType.Data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Data)) return false;
+        Data data = (Data) o;
+        return Objects.equals(_value, data._value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_value);
     }
 }

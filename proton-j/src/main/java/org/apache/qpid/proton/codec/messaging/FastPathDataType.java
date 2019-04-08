@@ -83,6 +83,11 @@ public class FastPathDataType implements AMQPType<Data>, FastPathDescribedTypeCo
 
     @Override
     public Data readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public Data readValue(Data last) {
         ReadableBuffer buffer = getDecoder().getBuffer();
         byte encodingCode = buffer.get();
 
@@ -106,10 +111,11 @@ public class FastPathDataType implements AMQPType<Data>, FastPathDescribedTypeCo
                                                "amount of data available ("+ buffer.remaining()+")");
         }
 
-        byte[] data = new byte[size];
-        buffer.get(data, 0, size);
+        byte[] bytes = new byte[size];
+        buffer.get(bytes, 0, size);
 
-        return new Data(new Binary(data));
+        Data data = new Data(new Binary(bytes));
+        return data.equals(last) ? last : data;
     }
 
     @Override

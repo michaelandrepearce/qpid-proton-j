@@ -24,6 +24,7 @@
 package org.apache.qpid.proton.amqp.messaging;
 
 import java.util.Map;
+import java.util.Objects;
 
 public final class Footer implements  Section
 {
@@ -48,5 +49,18 @@ public final class Footer implements  Section
     @Override
     public SectionType getType() {
         return SectionType.Footer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Footer)) return false;
+        Footer footer = (Footer) o;
+        return Objects.equals(_value, footer._value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_value);
     }
 }

@@ -57,6 +57,11 @@ public class FastPathPropertiesType implements AMQPType<Properties>, FastPathDes
 
     @Override
     public Properties readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public Properties readValue(Properties last) {
         DecoderImpl decoder = getDecoder();
         ReadableBuffer buffer = decoder.getBuffer();
         byte typeCode = decoder.getBuffer().get();
@@ -128,7 +133,7 @@ public class FastPathPropertiesType implements AMQPType<Properties>, FastPathDes
             }
         }
 
-        return properties;
+        return properties.equals(last) ? last : properties;
     }
 
     @Override

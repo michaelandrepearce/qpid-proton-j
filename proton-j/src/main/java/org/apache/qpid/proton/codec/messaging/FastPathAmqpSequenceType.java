@@ -80,7 +80,13 @@ public class FastPathAmqpSequenceType implements AMQPType<AmqpSequence>, FastPat
 
     @Override
     public AmqpSequence readValue() {
-        return new AmqpSequence(getDecoder().readList());
+        return readValue(null);
+    }
+
+    @Override
+    public AmqpSequence readValue(AmqpSequence last) {
+        AmqpSequence amqpSequence = new AmqpSequence(getDecoder().readList());
+        return amqpSequence.equals(last) ? last : amqpSequence;
     }
 
     @Override

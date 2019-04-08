@@ -23,6 +23,8 @@
 
 package org.apache.qpid.proton.amqp.messaging;
 
+import java.util.Objects;
+
 public final class AmqpValue implements Section
 {
     private final Object _value;
@@ -46,5 +48,18 @@ public final class AmqpValue implements Section
     @Override
     public SectionType getType() {
         return SectionType.AmqpValue;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AmqpValue)) return false;
+        AmqpValue amqpValue = (AmqpValue) o;
+        return Objects.equals(_value, amqpValue._value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_value);
     }
 }

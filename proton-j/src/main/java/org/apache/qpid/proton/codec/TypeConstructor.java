@@ -29,4 +29,8 @@ public interface TypeConstructor<V>
     boolean encodesJavaPrimitive();
 
     Class<V> getTypeClass();
+
+    default V readValue(V last) {
+        return readValue();
+    }
 }

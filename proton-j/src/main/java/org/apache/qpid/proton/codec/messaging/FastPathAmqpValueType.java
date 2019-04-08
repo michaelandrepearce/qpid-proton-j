@@ -80,7 +80,13 @@ public class FastPathAmqpValueType implements AMQPType<AmqpValue>, FastPathDescr
 
     @Override
     public AmqpValue readValue() {
-        return new AmqpValue(getDecoder().readObject());
+        return readValue(null);
+    }
+
+    @Override
+    public AmqpValue readValue(AmqpValue last) {
+        AmqpValue amqpValue = new AmqpValue(getDecoder().readObject());
+        return amqpValue.equals(last) ? last : amqpValue;
     }
 
     @Override

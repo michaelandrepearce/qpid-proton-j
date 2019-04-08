@@ -24,6 +24,7 @@
 package org.apache.qpid.proton.amqp.messaging;
 
 import java.util.Map;
+import java.util.Objects;
 
 public final class ApplicationProperties implements Section
 {
@@ -48,5 +49,18 @@ public final class ApplicationProperties implements Section
     @Override
     public SectionType getType() {
         return SectionType.ApplicationProperties;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ApplicationProperties)) return false;
+        ApplicationProperties that = (ApplicationProperties) o;
+        return Objects.equals(_value, that._value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_value);
     }
 }

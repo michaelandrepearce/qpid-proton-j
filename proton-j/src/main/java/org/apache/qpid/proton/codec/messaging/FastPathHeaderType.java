@@ -57,6 +57,11 @@ public class FastPathHeaderType implements AMQPType<Header>, FastPathDescribedTy
 
     @Override
     public Header readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public Header readValue(Header last) {
         DecoderImpl decoder = getDecoder();
         ReadableBuffer buffer = decoder.getBuffer();
         byte typeCode = decoder.getBuffer().get();
@@ -104,7 +109,7 @@ public class FastPathHeaderType implements AMQPType<Header>, FastPathDescribedTy
             }
         }
 
-        return header;
+        return header.equals(last) ? last : header;
     }
 
     @Override

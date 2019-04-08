@@ -17,6 +17,7 @@
 package org.apache.qpid.proton.codec.messaging;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -89,8 +90,15 @@ public class FastPathMessageAnnotationsType implements AMQPType<MessageAnnotatio
         return annotationsType.getAllEncodings();
     }
 
+    private static final MessageAnnotations NULL = new MessageAnnotations(null);
+
     @Override
     public MessageAnnotations readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public MessageAnnotations readValue(MessageAnnotations last) {
         DecoderImpl decoder = getDecoder();
         ReadableBuffer buffer = decoder.getBuffer();
 
@@ -109,7 +117,7 @@ public class FastPathMessageAnnotationsType implements AMQPType<MessageAnnotatio
                 count = buffer.getInt();
                 break;
             case EncodingCodes.NULL:
-                return new MessageAnnotations(null);
+                return NULL;
             default:
                 throw new ProtonException("Expected Map type but found encoding: " + encodingCode);
         }
@@ -121,7 +129,7 @@ public class FastPathMessageAnnotationsType implements AMQPType<MessageAnnotatio
 
         TypeConstructor<?> valueConstructor = null;
 
-        Map<Symbol, Object> map = new LinkedHashMap<>(count);
+        Map<Symbol, Object> map = new HashMap<>(count);
         for(int i = 0; i < count / 2; i++) {
             Symbol key = decoder.readSymbol(null);
             if (key == null) {
@@ -149,8 +157,12 @@ public class FastPathMessageAnnotationsType implements AMQPType<MessageAnnotatio
 
             map.put(key, value);
         }
+        return getMessageAnnotations(last, map);
+    }
 
-        return new MessageAnnotations(map);
+    private MessageAnnotations getMessageAnnotations(MessageAnnotations last, Map<Symbol, Object> map) {
+        MessageAnnotations messageAnnotations = new MessageAnnotations(map);
+        return messageAnnotations.equals(last) ? last : messageAnnotations;
     }
 
     @Override

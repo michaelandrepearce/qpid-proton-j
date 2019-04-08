@@ -23,6 +23,7 @@
 
 package org.apache.qpid.proton.amqp.messaging;
 
+import java.util.Objects;
 import org.apache.qpid.proton.amqp.UnsignedByte;
 import org.apache.qpid.proton.amqp.UnsignedInteger;
 
@@ -113,5 +114,22 @@ public final class Header implements Section
     @Override
     public SectionType getType() {
         return SectionType.Header;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Header)) return false;
+        Header header = (Header) o;
+        return Objects.equals(_durable, header._durable) &&
+              Objects.equals(_priority, header._priority) &&
+              Objects.equals(_ttl, header._ttl) &&
+              Objects.equals(_firstAcquirer, header._firstAcquirer) &&
+              Objects.equals(_deliveryCount, header._deliveryCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_durable, _priority, _ttl, _firstAcquirer, _deliveryCount);
     }
 }

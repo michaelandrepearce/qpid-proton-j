@@ -89,8 +89,15 @@ public class FastPathDeliveryAnnotationsType implements AMQPType<DeliveryAnnotat
         return annotationsType.getAllEncodings();
     }
 
+    private static final DeliveryAnnotations NULL = new DeliveryAnnotations(null);
+
     @Override
     public DeliveryAnnotations readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public DeliveryAnnotations readValue(DeliveryAnnotations last) {
         DecoderImpl decoder = getDecoder();
         ReadableBuffer buffer = decoder.getBuffer();
 
@@ -109,7 +116,7 @@ public class FastPathDeliveryAnnotationsType implements AMQPType<DeliveryAnnotat
                 count = buffer.getInt();
                 break;
             case EncodingCodes.NULL:
-                return new DeliveryAnnotations(null);
+                return NULL;
             default:
                 throw new ProtonException("Expected Map type but found encoding: " + encodingCode);
         }
@@ -150,7 +157,8 @@ public class FastPathDeliveryAnnotationsType implements AMQPType<DeliveryAnnotat
             map.put(key, value);
         }
 
-        return new DeliveryAnnotations(map);
+        DeliveryAnnotations deliveryAnnotations = new DeliveryAnnotations(map);
+        return deliveryAnnotations.equals(last) ? last : deliveryAnnotations;
     }
 
     @Override

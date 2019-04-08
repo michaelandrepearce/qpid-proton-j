@@ -89,8 +89,15 @@ public class FastPathApplicationPropertiesType implements AMQPType<ApplicationPr
         return propertiesType.getAllEncodings();
     }
 
+    private static final ApplicationProperties NULL = new ApplicationProperties(null);
+
     @Override
     public ApplicationProperties readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public ApplicationProperties readValue(ApplicationProperties last) {
         DecoderImpl decoder = getDecoder();
         ReadableBuffer buffer = decoder.getBuffer();
 
@@ -109,7 +116,7 @@ public class FastPathApplicationPropertiesType implements AMQPType<ApplicationPr
                 count = buffer.getInt();
                 break;
             case EncodingCodes.NULL:
-                return new ApplicationProperties(null);
+                return NULL;
             default:
                 throw new ProtonException("Expected Map type but found encoding: " + encodingCode);
         }
@@ -150,7 +157,8 @@ public class FastPathApplicationPropertiesType implements AMQPType<ApplicationPr
             map.put(key, value);
         }
 
-        return new ApplicationProperties(map);
+        ApplicationProperties applicationProperties = new ApplicationProperties(map);
+        return applicationProperties.equals(last) ? last : applicationProperties;
     }
 
     @Override

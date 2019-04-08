@@ -18,6 +18,7 @@ package org.apache.qpid.proton.codec.messaging;
 
 import java.util.Collection;
 
+import java.util.Objects;
 import org.apache.qpid.proton.amqp.Symbol;
 import org.apache.qpid.proton.amqp.UnsignedLong;
 import org.apache.qpid.proton.amqp.messaging.Footer;
@@ -81,7 +82,13 @@ public class FastPathFooterType implements AMQPType<Footer>, FastPathDescribedTy
 
     @Override
     public Footer readValue() {
-        return new Footer(getDecoder().readMap());
+        return readValue(null);
+    }
+
+    @Override
+    public Footer readValue(Footer last) {
+        Footer footer = new Footer(getDecoder().readMap());
+        return footer.equals(last) ? last : footer;
     }
 
     @Override
@@ -109,5 +116,18 @@ public class FastPathFooterType implements AMQPType<Footer>, FastPathDescribedTy
             decoder.register(descriptor, type);
         }
         encoder.register(type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FastPathFooterType)) return false;
+        FastPathFooterType that = (FastPathFooterType) o;
+        return Objects.equals(footerType, that.footerType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(footerType);
     }
 }

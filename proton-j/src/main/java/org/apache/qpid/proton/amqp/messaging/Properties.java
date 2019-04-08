@@ -25,6 +25,7 @@ package org.apache.qpid.proton.amqp.messaging;
 
 import java.util.Date;
 
+import java.util.Objects;
 import org.apache.qpid.proton.amqp.Binary;
 import org.apache.qpid.proton.amqp.Symbol;
 import org.apache.qpid.proton.amqp.UnsignedInteger;
@@ -219,5 +220,30 @@ public final class Properties implements Section
     @Override
     public SectionType getType() {
         return SectionType.Properties;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Properties)) return false;
+        Properties that = (Properties) o;
+        return Objects.equals(_messageId, that._messageId) &&
+              Objects.equals(_userId, that._userId) &&
+              Objects.equals(_to, that._to) &&
+              Objects.equals(_subject, that._subject) &&
+              Objects.equals(_replyTo, that._replyTo) &&
+              Objects.equals(_correlationId, that._correlationId) &&
+              Objects.equals(_contentType, that._contentType) &&
+              Objects.equals(_contentEncoding, that._contentEncoding) &&
+              Objects.equals(_absoluteExpiryTime, that._absoluteExpiryTime) &&
+              Objects.equals(_creationTime, that._creationTime) &&
+              Objects.equals(_groupId, that._groupId) &&
+              Objects.equals(_groupSequence, that._groupSequence) &&
+              Objects.equals(_replyToGroupId, that._replyToGroupId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_messageId, _userId, _to, _subject, _replyTo, _correlationId, _contentType, _contentEncoding, _absoluteExpiryTime, _creationTime, _groupId, _groupSequence, _replyToGroupId);
     }
 }

@@ -25,6 +25,7 @@ package org.apache.qpid.proton.amqp.messaging;
 
 import java.util.Map;
 
+import java.util.Objects;
 import org.apache.qpid.proton.amqp.Symbol;
 
 public final class DeliveryAnnotations implements Section
@@ -50,5 +51,18 @@ public final class DeliveryAnnotations implements Section
     @Override
     public SectionType getType() {
         return SectionType.DeliveryAnnotations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DeliveryAnnotations)) return false;
+        DeliveryAnnotations that = (DeliveryAnnotations) o;
+        return Objects.equals(_value, that._value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_value);
     }
 }

@@ -24,6 +24,7 @@
 package org.apache.qpid.proton.amqp.messaging;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class AmqpSequence implements Section
 {
@@ -50,5 +51,18 @@ public final class AmqpSequence implements Section
     @Override
     public SectionType getType() {
         return SectionType.AmqpSequence;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AmqpSequence)) return false;
+        AmqpSequence that = (AmqpSequence) o;
+        return Objects.equals(_value, that._value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_value);
     }
 }

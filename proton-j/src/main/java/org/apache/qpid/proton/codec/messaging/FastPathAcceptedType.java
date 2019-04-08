@@ -88,6 +88,11 @@ public class FastPathAcceptedType implements AMQPType<Accepted>, FastPathDescrib
 
     @Override
     public Accepted readValue() {
+        return readValue(null);
+    }
+
+    @Override
+    public Accepted readValue(Accepted last) {
         DecoderImpl decoder = getDecoder();
         byte typeCode = decoder.getBuffer().get();
 
